@@ -118,9 +118,10 @@
 			update_date, 
 			remarks, 
 			del_flag,
-		<if test="dbName == 'db2'">leave,</if>
+		<if test="dbName == 'db2'" >leave,</if>
+		<if test="dbName == 'oracle'" >leave,</if>
 
-		<if test="dbName != 'db2'">`leave`,</if>
+		<if test="dbName == 'mysql'">`leave`,</if>
 			leaf,
 						 external_Links ,
 
@@ -164,8 +165,9 @@
 			update_date = #{updateDate}, 
 			remarks = #{remarks},
 		<if test="dbName == 'db2'">leave = #{leave},</if>
+		<if test="dbName == 'oracle'">leave = #{leave},</if>
 
-		<if test="dbName != 'db2'">`leave` = #{leave},</if>
+		<if test="dbName == 'mysql'">`leave` = #{leave},</if>
 
 			 leaf = #{leaf},
 			 external_Links = #{externalLinks},

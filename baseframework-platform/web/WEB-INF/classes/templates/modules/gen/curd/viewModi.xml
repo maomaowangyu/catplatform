@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <name>viewModi</name>
+    <filePath>web/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+    <fileName>modi.jsp</fileName>
+    <content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<#include "/modules/gen/form.ftl"  encoding="UTF-8">
+
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>编辑</title>
+	<%@include file="/WEB-INF/views/include/treeview.jsp" %>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#inputForm").validate({
+				submitHandler: function(form){
+					save();
+				},
+				errorContainer: "#messageBox",
+				errorPlacement: function(error, element) {
+					if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+						error.appendTo(element.parent().parent());
+					} else {
+						error.insertAfter(element);
+					}
+				}
+			});
+		});
+
+		function save() {
+            ajaxSubmitPost('<c:url value="${"$"}{fns:getAdminPath()}/${moduleName}/${className}/save.do"/>');
+        }
+
+        function back() {
+            ajaxGet('<c:url value="${"$"}{fns:getAdminPath()}/${moduleName}/${className}/list.do"/>');
+        }
+	</script>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑
+                <span class="tools pull-right">
+                    <a href="javascript:;" class="fa fa-chevron-down"></a>
+                    <a href="javascript:;" class="fa fa-times"></a>
+                 </span>
+            </div>
+            <div class="panel-body">
+                <sys:message content="${r"${message}"}" type="${r"${flag}"}"/>
+
+                <div class=" form">
+                    <form:form id="inputForm" modelAttribute="${className}"  method="post" class="cmxform form-horizontal adminex-form">
+                        <form:hidden path="id"/>
+                        <@tablelist flag="1"></@tablelist>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <shiro:hasPermission name="${permissionPrefix}:edit">
+                                    <input id="btnSubmit" class="btn btn-primary" type="submit" value="<spring:message code="save" />"/>
+                                    &nbsp;
+                                    </shiro:hasPermission>
+                                <button class="btn btn-default" type="button" onclick="back();"><spring:message code="back" /></button>
+                            </div>
+                        </div>
+                    </form:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>]]>
+    </content>
+</template>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>viewList</name>
+	<filePath>web/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>list.jsp</fileName>
+	<content><![CDATA[
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+<%@ include file="/WEB-INF/views/include/list.jsp"%>
+
+<#include "/modules/gen/query.ftl"  encoding="UTF-8">
+<#include "/modules/gen/treetable.ftl"  encoding="UTF-8">
+<html>
+<head>
+	<title>${functionNameSimple}管理</title>
+	<script type="text/javascript">
+	        $("#treeTable").treeTable({expandLevel : 3}).show();
+
+		$(document).ready(function() {
+
+		});
+	    function add() {
+            ajaxGet('<c:url value="${"$"}{fns:getAdminPath()}/${moduleName}/${className}/toAddPage.do"/>');
+        }
+
+		function search() {
+			ajaxSubmitPost('<c:url value="${"$"}{fns:getAdminPath()}/${moduleName}/${className}/list.do"/>');
+		}
+
+
+		function modi(id) {
+			ajaxPost('<c:url value="${"$"}{fns:getAdminPath()}/${moduleName}/${className}/toModiPage.do"/>',id)
+		}
+	</script>
+
+	 <style type="text/css">
+        .button-font { font-size:14px; font-family:"微软雅黑";margin: 3px;}
+     </style>
+</head>
+<body>
+	<form:form id="inputForm" modelAttribute="${className}" method="post" class="cmxform form-horizontal adminex-form">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    列表
+                                    <span class="tools pull-right">
+                                        <a href="javascript:;" class="fa fa-chevron-down"></a>
+                                        <a href="javascript:;" class="fa fa-times"></a>
+                                     </span>
+                </div>
+                <div class="panel-body">
+                <sys:message content="${r"${message}"}" type="${r"${flag}"}"/>
+					<@query></@query>
+
+                    <div style="float:left;">
+                        <button class="btn btn-default button-font"  type="button" onclick="search();"><i class="fa fa-search"></i></button>
+                    </div>
+
+                    <div style="float:right;">
+                            <button class="btn btn-default button-font"  type="button" onclick="add();"><spring:message code="add" /></button>
+                    </div>
+
+                    <@treetablelist></@treetablelist>
+
+                    <sys:page page="${r"${page}"}" url="${"$"}{fns:getAdminPath()}/${className}/list.do"/>
+                </div>
+            </div>
+        </div>
+    </div>
+	</form:form>
+</body>
+</html>]]>
+	</content>
+</template>

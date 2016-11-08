@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.galaxy.modules.gen.dao.GenTableColumnDao">
+    
+    <sql id="genTableColumnColumns">
+		a.*,
+		b.id AS "genTable.id",
+		b.name AS "genTable.name",
+		b.comments AS "genTable.comments",
+		b.class_name AS "genTable.className",
+		b.parent_table AS "genTable.parentTable",
+		b.parent_table_fk AS "genTable.parentTableFk"
+	</sql>
+	
+	<sql id="genTableColumnJoins">
+		JOIN gen_table b ON b.id = a.gen_table_id
+    </sql>
+    
+    <select id="get" resultType="GenTableColumn">
+		SELECT 
+			<include refid="genTableColumnColumns"/>
+		FROM gen_table_column a
+		<include refid="genTableColumnJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GenTableColumn">
+		SELECT 
+			<include refid="genTableColumnColumns"/>
+		FROM gen_table_column a
+		<include refid="genTableColumnJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		<if test="name != null and name != ''">
+			AND a.name LIKE 
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			<if test="dbName == 'db2'">'%'||CAST(#{name} AS VARCHAR(255))||'%'</if>
+		</if>
+		<if test="genTable != null and genTable.id != null and genTable.id != ''">
+			AND a.gen_table_id = #{genTable.id}
+		</if>
+		ORDER BY a.sort ASC
+	</select>
+	
+	<select id="findAllList" resultType="GenTableColumn">
+		SELECT 
+			<include refid="genTableColumnColumns"/>
+		FROM gen_table_column a
+		<include refid="genTableColumnJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY a.sort ASC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gen_table_column(
+			id, 
+			gen_table_id, 
+			name, 
+			comments, 
+			jdbc_type, 
+			java_type, 
+			java_field,
+			is_pk ,
+			is_null,
+			is_insert,
+			is_edit,
+			is_list,
+			is_query,
+			query_type, 
+			show_type, 
+			dict_type, 
+			sort, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{genTable.id}, 
+			#{name}, 
+			#{comments}, 
+			#{jdbcType}, 
+			#{javaType}, 
+			#{javaField},
+			<if test="isPk != null">
+				 #{isPk},
+			</if>
+			<if test="isPk == null">
+				 '',
+			</if>
+			<if test="isNull != null">
+				 #{isNull},
+			</if>
+			<if test="isNull == null">
+				 '',
+			</if>
+		<if test="isInsert != null">
+			 #{isInsert},
+		</if>
+		<if test="isInsert == null">
+			 '',
+		</if>
+		<if test="isEdit != null">
+			#{isEdit},
+		</if>
+		<if test="isEdit == null">
+			 '',
+		</if>
+		<if test="isList != null">
+			 #{isList},
+		</if>
+		<if test="isList == null">
+			 '',
+		</if>
+		<if test="isQuery != null">
+			 #{isQuery},
+		</if>
+		<if test="isQuery == null">
+			 '',
+		</if>
+		<if test="queryType != null">
+			#{queryType},
+		</if>
+		<if test="queryType == null">
+			'',
+		</if>
+		<if test="showType != null">
+			#{showType},
+		</if>
+		<if test="showType == null">
+			'',
+		</if>
+		<if test="dictType != null">
+			#{dictType},
+		</if>
+		<if test="dictType == null">
+			'',
+		</if>
+
+			#{sort}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+		<if test="remarks != null">
+			#{remarks},
+		</if>
+		<if test="remarks == null">
+			'',
+		</if>
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gen_table_column SET 
+			comments = #{comments}, 
+			jdbc_type = #{jdbcType}, 
+			java_type = #{javaType}, 
+			java_field = #{javaField},
+		<if test="isPk != null">
+			is_pk = #{isPk,jdbcType=CHAR},
+		</if>
+		<if test="isPk == null">
+			is_pk = '',
+		</if>
+		<if test="isNull != null">
+			is_null = #{isNull,jdbcType=CHAR},
+		</if>
+		<if test="isNull == null">
+			is_null = '',
+		</if>
+		<if test="isInsert != null">
+			is_insert = #{isInsert,jdbcType=CHAR},
+		</if>
+		<if test="isInsert == null">
+			is_insert = '',
+		</if>
+		<if test="isEdit != null">
+			is_edit = #{isEdit,jdbcType=CHAR},
+		</if>
+		<if test="isEdit == null">
+			is_edit = '',
+		</if>
+		<if test="isList != null">
+		is_list = #{isList,jdbcType=CHAR},
+		</if>
+		<if test="isList == null">
+			is_list = '',
+		</if>
+		<if test="isQuery != null">
+			is_query = #{isQuery,jdbcType=CHAR},
+		</if>
+		<if test="isList == null">
+			is_query = '',
+		</if>
+			query_type = #{queryType},
+			show_type = #{showType}, 
+			dict_type = #{dictType}, 
+			sort = #{sort}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gen_table_column SET 
+			del_flag = '1'
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByGenTableId">
+		UPDATE gen_table_column SET 
+			del_flag = '1'
+		WHERE gen_table_id = #{deleteByGenTableId}
+	</update>
+	
+</mapper>

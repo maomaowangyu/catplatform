@@ -32,8 +32,13 @@
         <property name="typeAliasesSuperType" value="com.galaxy.common.persistence.BaseEntity"/>
         <property name="mapperLocations" value="classpath:/mappings/**/*.xml"/>
 		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
-    </bean>
-    
+		<property name="plugins" ref="mapinterceptor"></property>
+	</bean>
+
+	<util:list id="mapinterceptor" list-class="java.util.ArrayList">
+		<bean class="com.galaxy.common.mybatis.MapInterceptor"/>
+	</util:list>
+
     <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
